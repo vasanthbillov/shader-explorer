@@ -13,6 +13,9 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: shader-explorer-source
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -20,8 +23,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version-file: .nvmrc
+          node-version: 20.20.1
           cache: npm
+          cache-dependency-path: shader-explorer-source/package-lock.json
       - run: npm ci
       - run: npm run typecheck
       - run: npm test
@@ -36,7 +40,7 @@ jobs:
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: shader-explorer-source/dist
       - name: Publish verified artifact
         id: deployment
         uses: actions/deploy-pages@v4
