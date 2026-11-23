@@ -13,7 +13,9 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-24.04
-    container: mcr.microsoft.com/playwright:v1.56.1-noble
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.1-noble
+      options: --user 1001
     defaults:
       run:
         working-directory: shader-explorer-source
