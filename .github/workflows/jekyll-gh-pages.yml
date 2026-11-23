@@ -13,6 +13,7 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-24.04
+    container: mcr.microsoft.com/playwright:v1.56.1-noble
     defaults:
       run:
         working-directory: shader-explorer-source
@@ -32,10 +33,10 @@ jobs:
       - run: npm run build
         env:
           VITE_BASE_PATH: /${{ github.event.repository.name }}/
-      - run: npx playwright install --with-deps chromium firefox webkit
-      - run: npm run test:e2e
+      - run: xvfb-run --auto-servernum npm run test:e2e -- --headed --retries=1
         env:
           VITE_BASE_PATH: /${{ github.event.repository.name }}/
+          LIBGL_ALWAYS_SOFTWARE: "1"
           PLAYWRIGHT_BASE_URL: http://127.0.0.1:4173/${{ github.event.repository.name }}/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
